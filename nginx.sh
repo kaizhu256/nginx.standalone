@@ -45,23 +45,13 @@ build() {
   SCRIPT="$SCRIPT; cd .build"
   SCRIPT="$SCRIPT && lndir ../.src > /dev/null"
   SCRIPT="$SCRIPT && cd nginx"
-
-  ## ARCH
-  case $(uname) in
-  Darwin)
-    ARCH="-arch $(uname -m)";
-    ;;
-  esac
-  SCRIPT="$SCRIPT && export CFLAGS='$ARCH'"
-  SCRIPT="$SCRIPT && export CXXFLAGS='$ARCH'"
-  SCRIPT="$SCRIPT && export LDFLAGS='$ARCH'"
   SCRIPT="$SCRIPT && ./configure "
 
   ## http://wiki.nginx.org/Modules
   ## Addition - Append text to pages.
   SCRIPT="$SCRIPT --with-http_addition_module"
   ## Auth Request - Implements client authorization based on the result of a subrequest. 1.5.4
-  # SCRIPT="$SCRIPT --with-http_auth_request_module"
+  SCRIPT="$SCRIPT --with-http_auth_request_module"
   ## Degradation - Allow to return 204 or 444 code for some locations on low memory condition. 0.8.25
   SCRIPT="$SCRIPT --with-http_degradation_module"
   ## Embedded Perl - Use Perl in Nginx config files. 0.3.21
@@ -97,7 +87,7 @@ build() {
   ## XSLT - Post-process pages with XSLT. 0.7.8
   # SCRIPT="$SCRIPT --with-http_xslt_module"
   ## Mail Core - Core parameters for mail module.
-  # SCRIPT="$SCRIPT --with-mail"
+  SCRIPT="$SCRIPT --with-mail"
   ## POP3 - POP3 settings.
   # SCRIPT="$SCRIPT --without-mail_pop3_module"
   ## IMAP - IMAP settings.
@@ -105,7 +95,7 @@ build() {
   ## SMTP - SMTP settings.
   # SCRIPT="$SCRIPT --without-mail_smtp_module"
   ## SSL - This module ensures SSL/TLS support for POP3/IMAP/SMTP.
-  # SCRIPT="$SCRIPT --with-mail_ssl_module"
+  SCRIPT="$SCRIPT --with-mail_ssl_module"
 
   ## http://wiki.nginx.org/InstallOptions
   ## Files and permissions
@@ -154,11 +144,17 @@ build() {
   SCRIPT="$SCRIPT --with-pcre-jit"
   ## sets the path to the sources of the zlib library. The library distribution (version 1.1.3 - 1.2.5) needs to be downloaded from the zlib site and extracted. The rest is done by nginx's ./configure and make. The library is required for the ngx_http_gzip_module module.
   SCRIPT="$SCRIPT --with-zlib=../zlib"
+
   ## Compilation controls
+  case $(uname) in
+  Darwin)
+    ARCH="-arch $(uname -m)";
+    ;;
+  esac
   ## sets additional parameters that will be added to the CFLAGS variable.
-  # SCRIPT="$SCRIPT --with-cc-opt=parameters"
+  SCRIPT="$SCRIPT --with-cc-opt='$ARCH'"
   ## sets additional parameters that will be used during linking.
-  # SCRIPT="$SCRIPT --with-ld-opt=parameters"
+  SCRIPT="$SCRIPT --with-ld-opt='$ARCH'"
 
   SCRIPT="$SCRIPT | tee ../../build.log 2>&1"
   SCRIPT="$SCRIPT && make | tee -a ../../build.log 2>&1"
