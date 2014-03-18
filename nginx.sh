@@ -38,13 +38,23 @@ build() {
   cd "$DIR"
 
   ## build nginx
-  local ARCH=;
   local SCRIPT="echo 'building $NGINX ...'"
   SCRIPT="$SCRIPT; rm -r .build > /dev/null 2>&1"
   SCRIPT="$SCRIPT; mkdir .build .dist .src > /dev/null 2>&1"
   SCRIPT="$SCRIPT; cd .build"
   SCRIPT="$SCRIPT && lndir ../.src > /dev/null"
   SCRIPT="$SCRIPT && cd nginx"
+
+  ## ARCH
+  local ARCH;
+  case $(uname) in
+  Darwin)
+    ARCH="-arch $(uname -m)";
+    ;;
+  esac
+  SCRIPT="$SCRIPT && export CFLAGS='$ARCH'"
+  SCRIPT="$SCRIPT && export CXXFLAGS='$ARCH'"
+  SCRIPT="$SCRIPT && export LDFLAGS='$ARCH'"
   SCRIPT="$SCRIPT && ./configure "
 
   ## http://wiki.nginx.org/Modules
@@ -146,15 +156,10 @@ build() {
   SCRIPT="$SCRIPT --with-zlib=../zlib"
 
   ## Compilation controls
-  case $(uname) in
-  Darwin)
-    ARCH="-arch $(uname -m)";
-    ;;
-  esac
   ## sets additional parameters that will be added to the CFLAGS variable.
-  SCRIPT="$SCRIPT --with-cc-opt='$ARCH'"
+  # SCRIPT="$SCRIPT --with-cc-opt=parameters"
   ## sets additional parameters that will be used during linking.
-  SCRIPT="$SCRIPT --with-ld-opt='$ARCH'"
+  # SCRIPT="$SCRIPT --with-ld-opt=parameters"
 
   SCRIPT="$SCRIPT | tee ../../build.log 2>&1"
   SCRIPT="$SCRIPT && make | tee -a ../../build.log 2>&1"
