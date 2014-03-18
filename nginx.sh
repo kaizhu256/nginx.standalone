@@ -16,14 +16,14 @@ build() {
   mkdir .src > /dev/null 2>&1
   cd .src
   if [ ! -d nginx ]; then
-    wget http://nginx.org/download/nginx-1.4.6.tar.gz
-    tar -xzf nginx-1.4.6.tar.gz
-    mv nginx-1.4.6 nginx
+    wget http://nginx.org/download/nginx-1.5.12.tar.gz
+    tar -xzf nginx-1.5.12.tar.gz
+    mv nginx-1.5.12 nginx
   fi
   if [ ! -d openssl ]; then
-    wget http://www.openssl.org/source/openssl-0.9.8x.tar.gz
-    tar -xzf openssl-0.9.8x.tar.gz
-    mv openssl-0.9.8x openssl
+    wget http://www.openssl.org/source/openssl-1.0.1f.tar.gz
+    tar -xzf openssl-1.0.1f.tar.gz
+    mv openssl-1.0.1f openssl
   fi
   if [ ! -d pcre ]; then
     wget http://downloads.sourceforge.net/project/pcre/pcre/8.33/pcre-8.33.tar.gz
