@@ -1,5 +1,19 @@
 #!/bin/sh
 
+shCprs () {
+  ## this function performs cp -rs across different platforms
+  local SCRIPT=":"
+  case $(uname) in
+  Darwin)
+    SCRIPT="$SCRIPT; mkdir $2 && cd $2 && lndir $1 > /dev/null"
+    ;;
+  Linux)
+    SCRIPT="$SCRIPT; cp -rs $1 $2"
+    ;;
+  esac
+  shEval "$SCRIPT"
+}
+
 shEval () {
   ## this function evals $1
   echo $1
@@ -18,12 +32,13 @@ shMain () {
   local NGINX=.install/nginx.$NGINX_VERSION.$(uname).$(uname -m)
   ## nginx executable with prefix
   local NGINX_P="$NGINX -p '$CWD/nginx'"
-  local SCRIPT="cd '$DIR'"
+  local SCRIPT=":"
   echo $DIR
   case $1 in
 
   ## build userland nginx
   build)
+    SCRIPT="$SCRIPT; cd '$DIR'"
     SCRIPT="$SCRIPT; echo && echo 'building $NGINX ...'"
 
     ## os specific parameters
@@ -64,8 +79,7 @@ shMain () {
 
     ## create build dir
     SCRIPT="$SCRIPT; cd $DIR"
-    SCRIPT="$SCRIPT; if [ ! -d .build ]; then"
-    SCRIPT="$SCRIPT mkdir .build && cd .build && lndir ../.src > /dev/null"
+    SCRIPT="$SCRIPT; if [ ! -d .build ]; then shCprs '$DIR/.src' '$DIR/.build'"
     SCRIPT="$SCRIPT; fi"
 
     ## configure nginx
@@ -179,6 +193,7 @@ shMain () {
     SCRIPT="$SCRIPT && make"
     SCRIPT="$SCRIPT && cp objs/nginx ../../$NGINX"
     SCRIPT="$SCRIPT && echo '... built $NGINX' && echo"
+    shEval "$SCRIPT"
     ;;
 
   ## restart nginx
@@ -189,6 +204,7 @@ shMain () {
     SCRIPT="$SCRIPT; echo 'starting nginx ...'"
     SCRIPT="$SCRIPT; $NGINXP"
     SCRIPT="$SCRIPT && echo 'started nginx'"
+    shEval "$SCRIPT"
     ;;
 
   ## stop nginx
@@ -196,12 +212,10 @@ shMain () {
     SCRIPT="$SCRIPT; echo 'stopping nginx ...'"
     SCRIPT="$SCRIPT; $NGINXP -s stop"
     SCRIPT="$SCRIPT && echo 'stopped nginx'"
+    shEval "$SCRIPT"
     ;;
 
   esac
-
-  echo $SCRIPT
-  eval "$SCRIPT"
 }
 
 shMain $1 $2 $3 $4
