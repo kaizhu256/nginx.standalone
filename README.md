@@ -1,3 +1,5 @@
+[![codeship.io build status](https://www.codeship.io/projects/f9e67bd0-9da4-0131-6577-3adfdbfc077f/status?branch=test)](https://www.codeship.io/projects/17956?branch=test)
+
 # nginx_standalone
 #### standalone, userland nginx
 
