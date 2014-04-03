@@ -1,19 +1,5 @@
 #!/bin/sh
 
-shCprs () {
-  ## this function performs cp -rs across different platforms
-  local SCRIPT=":"
-  case $(uname) in
-  Darwin)
-    SCRIPT="$SCRIPT; mkdir $2 && cd $2 && lndir $1 > /dev/null"
-    ;;
-  Linux)
-    SCRIPT="$SCRIPT; cp -rs $1 $2"
-    ;;
-  esac
-  shEval "$SCRIPT"
-}
-
 shEval () {
   ## this function evals $1
   echo $1
@@ -79,8 +65,7 @@ shMain () {
 
     ## create build dir
     SCRIPT="$SCRIPT; cd $DIR"
-    SCRIPT="$SCRIPT; if [ ! -d .build ]; then shCprs '$DIR/.src' '$DIR/.build'"
-    SCRIPT="$SCRIPT; fi"
+    SCRIPT="$SCRIPT; if [ ! -d .build ]; then cp -a .src .build; fi"
 
     ## configure nginx
     SCRIPT="$SCRIPT; cd $DIR/.build/nginx"
@@ -191,7 +176,11 @@ shMain () {
 
     ## make nginx
     SCRIPT="$SCRIPT && make"
-    SCRIPT="$SCRIPT && cp objs/nginx ../../$NGINX"
+
+    ## install nginx
+    SCRIPT="$SCRIPT && cd '$DIR'"
+    SCRIPT="$SCRIPT && [ -d .install ] || mkdir .install"
+    SCRIPT="$SCRIPT && cp .build/nginx/objs/nginx $NGINX"
     SCRIPT="$SCRIPT && echo '... built $NGINX' && echo"
     shEval "$SCRIPT"
     ;;
