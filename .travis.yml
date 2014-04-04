@@ -6,4 +6,6 @@ before_script:
 language:
   - objective-c
 # script: ./nginx.sh test
+node_js:
+  - "0.10"
 
