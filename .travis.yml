@@ -1,6 +1,4 @@
 language:
-  matrix:
-    - node_js
-    - objective-c
+  - objective-c
 script: ./nginx.sh build
 
