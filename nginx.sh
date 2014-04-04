@@ -7,7 +7,7 @@ shEval () {
 }
 
 shMain () {
-## this function is the main program
+  ## this function is the main program
   ## cwd
   local CWD=$(pwd)
   ## nginx_standalone's root directory

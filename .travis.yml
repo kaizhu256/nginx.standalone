@@ -1,4 +1,9 @@
+## use osx platform
+# after_success:
+  # - ./nginx.sh publish
+before_script:
+  - node -e "console.log('hello')" && ./nginx.sh build
 language:
   - objective-c
-script: ./nginx.sh build
+# script: ./nginx.sh test
 
