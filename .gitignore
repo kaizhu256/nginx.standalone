@@ -8,6 +8,8 @@
 .build
 .env
 .git
+.gitconfig
+.gitignore
 .hg
 .install
 .lock-wscript

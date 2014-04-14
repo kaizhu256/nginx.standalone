@@ -49,8 +49,8 @@ shMain () {
     SCRIPT="$SCRIPT; fi"
     ## get openssl source code
     SCRIPT="$SCRIPT; if [ ! -d openssl ]; then"
-    SCRIPT="$SCRIPT curl -sL https://github.com/openssl/openssl/archive/OpenSSL_1_0_1f.tar.gz"
-    SCRIPT="$SCRIPT | tar -xzvf - && mv openssl-OpenSSL_1_0_1f openssl"
+    SCRIPT="$SCRIPT curl -sL https://github.com/openssl/openssl/archive/OpenSSL_1_0_1g.tar.gz"
+    SCRIPT="$SCRIPT | tar -xzvf - && mv openssl-OpenSSL_1_0_1g openssl"
     SCRIPT="$SCRIPT; fi"
     ## get pcre source code
     SCRIPT="$SCRIPT; if [ ! -d pcre ]; then"

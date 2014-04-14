@@ -1,8 +1,8 @@
-## use osx platform
 # after_success:
   # - ./nginx.sh publish
 before_script:
-  - node -e "console.log('hello')" && ./nginx.sh build
+  - ./nginx.sh build
+## use darwin platform
 language:
   - objective-c
 # script: ./nginx.sh test
